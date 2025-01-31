@@ -31,6 +31,13 @@ jobs:
         run: |
           pnpm nx run next-auth:build
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
       - name: Deploy
         shell: bash
         run: |

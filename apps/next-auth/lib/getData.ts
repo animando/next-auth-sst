@@ -1,16 +1,20 @@
 'use server';
 
-import axios from 'axios';
-import { cookies } from 'next/headers';
-
+import { auth } from '@clerk/nextjs/server';
 export type Data = {
   message: string;
 };
-export const getData = async () => {
-  const session = (await cookies()).get('__session');
 
-  const response = await axios.get<Data>('http://localhost:5000/api', {
-    headers: { Authorization: `Bearer ${session?.value || ''}` },
-  });
-  return response.data;
+const secretKey = process.env['CLERK_SECRET_KEY'];
+if (!secretKey) {
+  throw Error('CLERK_SECRET_KEY not defined');
+}
+export const getData = async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error('You must be signed in');
+  }
+
+  return { message: 'Verified' };
 };

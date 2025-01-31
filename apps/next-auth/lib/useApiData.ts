@@ -5,7 +5,6 @@ export const useApiData = () => {
   const [data, setData] = useState<Data>();
 
   useEffect(() => {
-    console.log('call api');
     void getData()
       .then((d) => setData(d))
       .catch((e) => {

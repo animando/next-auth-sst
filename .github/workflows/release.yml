@@ -15,6 +15,7 @@ jobs:
   build:
     name: Build and deploy
     runs-on: ubuntu-latest
+    environment: development
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4.1.1
@@ -25,6 +26,8 @@ jobs:
 
       - name: Build
         shell: bash
+        env:
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
         run: |
           pnpm nx run next-auth:build
 

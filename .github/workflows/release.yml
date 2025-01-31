@@ -15,7 +15,6 @@ jobs:
   prepare:
     name: Prepare
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4.1.1
@@ -37,3 +36,18 @@ jobs:
           set -x
           pnpm -v
           pnpm install
+          pwd
+          ls -al
+
+  build:
+    name: Build
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Build
+        shell: bash
+        run: |
+          pwd
+          ls -al
+          pnpm nx run next-auth:build

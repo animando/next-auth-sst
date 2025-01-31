@@ -1,0 +1,21 @@
+name: Prepare pipeline
+description: This prepares the pipeline to run code.
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 8.15.9
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20.18.1
+        cache: pnpm
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -x
+        pnpm -v
+        pnpm install

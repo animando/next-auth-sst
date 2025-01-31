@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  prepare:
-    name: Prepare
+  build:
+    name: Build and deploy
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -21,33 +21,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.9
+      - uses: ./.github/actions/prepare
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.1
-          cache: pnpm
-
-      - name: Install dependencies
-        shell: bash
-        run: |
-          set -x
-          pnpm -v
-          pnpm install
-          pwd
-          ls -al
-
-  build:
-    name: Build
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    steps:
       - name: Build
         shell: bash
         run: |
-          pwd
-          ls -al
           pnpm nx run next-auth:build
+
+      - name: Deploy
+        shell: bash
+        run: |
+          pnpm sst deploy --stage development

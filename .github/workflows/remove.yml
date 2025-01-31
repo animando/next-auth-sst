@@ -1,0 +1,34 @@
+name: Remove
+run-name: ${{ github.event.head_commit.message }}
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow_ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Remove
+    runs-on: ubuntu-latest
+    environment: development
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/prepare
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Deploy
+        shell: bash
+        run: |
+          pnpm sst remove --stage development
